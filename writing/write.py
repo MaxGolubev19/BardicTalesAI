@@ -1,7 +1,3 @@
-import os
-from datetime import datetime
-
-
 class Write:
     send_history = None
     send_feedback = None
@@ -27,6 +23,9 @@ class Write:
     async def set_settings(self, settings: str) -> None:
         await self.write_message('Settings', settings)
 
+    async def set_role_prompt(self, role_prompt: str) -> None:
+        await self.write_message('RolePrompt', role_prompt)
+
     async def set_start_prompt(self, start_prompt: str) -> None:
         await self.write_message('StartPrompt', start_prompt)
 
@@ -35,6 +34,18 @@ class Write:
 
     async def set_rule_prompt(self, rule_prompt: str) -> None:
         await self.write_message('RulePrompt', rule_prompt)
+
+    async def set_past_prompt(self, past_prompt: str) -> None:
+        await self.write_message('PastPrompt', past_prompt)
+
+    async def set_info_template(self, info_template: str) -> None:
+        await self.write_message('InfoTemplate', info_template)
+
+    async def set_create_info_prompt(self, create_info_prompt: str) -> None:
+        await self.write_message('CreateInfoPrompt', create_info_prompt)
+
+    async def set_update_info_prompt(self, update_info_prompt: str) -> None:
+        await self.write_message('UpdateInfoPrompt', update_info_prompt)
 
     async def move(self, role: str, content: str) -> None:
         await self.write_message(role, content)

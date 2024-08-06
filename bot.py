@@ -30,12 +30,17 @@ class GameBot:
     class States(StatesGroup):
         settings = State()
         feedback = State()
-        bug_report = State()
+        report = State()
         language = State()
 
-        settings_pro_start = State()
-        settings_pro_move = State()
-        settings_pro_rule = State()
+        role_prompt = State()
+        start_prompt = State()
+        move_prompt = State()
+        rule_prompt = State()
+        past_prompt = State()
+        info_template = State()
+        create_info_prompt = State()
+        update_info_prompt = State()
 
         admin_mode = State()
 
@@ -96,6 +101,7 @@ class GameBot:
         await self.bot.send_message(chat_id=-1002246159913, text=message)
 
     def register_handlers(self) -> None:
+        # Commands
         # Cancel
         @self.dp.message(Command("cancel"))
         async def handler(message: Message, state: FSMContext):
@@ -116,11 +122,11 @@ class GameBot:
             return ReplyKeyboardMarkup(
                 keyboard=[
                     [
-                        KeyboardButton(text="/basic_settings"),
-                        # KeyboardButton(text="/advanced_settings")
+                        KeyboardButton(text="/story_settings")
                     ],
                     [
                         KeyboardButton(text="/random_settings"),
+                        KeyboardButton(text="/prompts_settings"),
                     ],
                 ],
                 resize_keyboard=True,
@@ -133,77 +139,110 @@ class GameBot:
                                  reply_markup=get_settings_menu(),
                                  parse_mode='Markdown')
 
-        # Random genre
+        # Random settings
         @self.dp.message(Command("random_settings"))
         @log(game_logging.set_basic_log)
         async def handler(message: Message, state: FSMContext):
             await self.get_user(message).get_game().set_random_settings()
-            await message.answer(self.get_language(message).basic_finish(),
+            await message.answer(self.get_language(message).story_settings_finish(),
                                  reply_markup=ReplyKeyboardRemove(),
                                  parse_mode='Markdown')
 
         # Basic Settings
-        @self.dp.message(Command("basic_settings"))
+        @self.dp.message(Command("story_settings"))
         async def handler(message: Message, state: FSMContext):
             await state.set_state(GameBot.States.settings)
-            await message.answer(self.get_language(message).basic_start(),
+            await message.answer(self.get_language(message).story_settings(),
                                  reply_markup=ReplyKeyboardRemove(),
                                  parse_mode='Markdown')
 
-        @self.dp.message(GameBot.States.settings)
-        @self.dp.message(GameBot.States.settings)
-        @log(game_logging.set_basic_log)
+        # Advanced settings
+        def get_advanced_settings_menu():
+            return ReplyKeyboardMarkup(
+                keyboard=[
+                    [
+                        KeyboardButton(text="/role_prompt"),
+                        KeyboardButton(text="/start_prompt"),
+                    ],
+                    [
+                        KeyboardButton(text="/move_prompt"),
+                        KeyboardButton(text="/rule_prompt"),
+                    ],
+                    [
+                        KeyboardButton(text="/past_prompt"),
+                        KeyboardButton(text="/info_template"),
+                    ],
+                    [
+                        KeyboardButton(text="/create_info_prompt"),
+                        KeyboardButton(text="/update_info_prompt"),
+                    ],
+                    [
+                        KeyboardButton(text="/finish"),
+                    ],
+                ],
+                resize_keyboard=True,
+                one_time_keyboard=True
+            )
+
+        @self.dp.message(Command("prompts_settings"))
         async def handler(message: Message, state: FSMContext):
-            await self.return_to_state(message, state)
-            await self.get_user(message).get_game().set_basic_settings(message.text)
-            await message.answer(self.get_language(message).basic_finish(),
+            await message.answer(self.get_language(message).prompts_settings(),
+                                 reply_markup=get_advanced_settings_menu(),
                                  parse_mode='Markdown')
 
-        # # Advanced settings
-        # def get_advanced_settings_menu():
-        #     return ReplyKeyboardMarkup(
-        #         keyboard=[
-        #             [
-        #                 KeyboardButton(text="/set_role"),
-        #                 KeyboardButton(text="/set_start"),
-        #                 KeyboardButton(text="/set_move"),
-        #                 KeyboardButton(text="/set_rule"),
-        #                 KeyboardButton(text="/set_past"),
-        #                 KeyboardButton(text="/set_info_template"),
-        #                 KeyboardButton(text="/set_info"),
-        #             ],
-        #         ],
-        #         resize_keyboard=True,
-        #         one_time_keyboard=True
-        #     )
-        #
-        # @self.dp.message(Command("advanced_settings"))
-        # async def handler(message: Message, state: FSMContext):
-        #     await message.answer(self.get_language(message).start_prompt(),
-        #                          reply_markup=get_advanced_settings_menu(),
-        #                          parse_mode='Markdown')
-        #
-        # @self.dp.message(GameBot.States.settings_pro_start)
-        # async def handler(message: Message, state: FSMContext):
-        #     await state.set_state(GameBot.States.settings_pro_move)
-        #     self.get_user(message).get_game().set_start_prompt(message.text)
-        #     await message.answer(self.get_language(message).move_prompt(),
-        #                          parse_mode='Markdown')
-        #
-        # @self.dp.message(GameBot.States.settings_pro_move)
-        # async def handler(message: Message, state: FSMContext):
-        #     await state.set_state(GameBot.States.settings_pro_rule)
-        #     self.get_user(message).get_game().set_move_prompt(message.text)
-        #     await message.answer(self.get_language(message).rule_prompt(),
-        #                          parse_mode='Markdown')
-        #
-        # @self.dp.message(GameBot.States.settings_pro_rule)
-        # @log(game_logging.set_advanced_log)
-        # async def handler(message: Message, state: FSMContext):
-        #     await self.return_to_state(message, state)
-        #     self.get_user(message).get_game().set_rule_prompt(message.text)
-        #     await message.answer(self.get_language(message).prompts_finish(),
-        #                          parse_mode='Markdown')
+        @self.dp.message(Command("role_prompt"))
+        async def handler(message: Message, state: FSMContext):
+            await state.set_state(GameBot.States.role_prompt)
+            await message.answer(self.get_language(message).role_prompt(),
+                                 parse_mode='Markdown')
+
+        @self.dp.message(Command("start_prompt"))
+        async def handler(message: Message, state: FSMContext):
+            await state.set_state(GameBot.States.start_prompt)
+            await message.answer(self.get_language(message).start_prompt(),
+                                 parse_mode='Markdown')
+
+        @self.dp.message(Command("move_prompt"))
+        async def handler(message: Message, state: FSMContext):
+            await state.set_state(GameBot.States.move_prompt)
+            await message.answer(self.get_language(message).move_prompt(),
+                                 parse_mode='Markdown')
+
+        @self.dp.message(Command("rule_prompt"))
+        async def handler(message: Message, state: FSMContext):
+            await state.set_state(GameBot.States.rule_prompt)
+            await message.answer(self.get_language(message).rule_prompt(),
+                                 parse_mode='Markdown')
+
+        @self.dp.message(Command("past_prompt"))
+        async def handler(message: Message, state: FSMContext):
+            await state.set_state(GameBot.States.past_prompt)
+            await message.answer(self.get_language(message).past_prompt(),
+                                 parse_mode='Markdown')
+
+        @self.dp.message(Command("info_template"))
+        async def handler(message: Message, state: FSMContext):
+            await state.set_state(GameBot.States.info_template)
+            await message.answer(self.get_language(message).info_template(),
+                                 parse_mode='Markdown')
+
+        @self.dp.message(Command("create_info_prompt"))
+        async def handler(message: Message, state: FSMContext):
+            await state.set_state(GameBot.States.create_info_prompt)
+            await message.answer(self.get_language(message).create_info_prompt(),
+                                 parse_mode='Markdown')
+
+        @self.dp.message(Command("update_info_prompt"))
+        async def handler(message: Message, state: FSMContext):
+            await state.set_state(GameBot.States.update_info_prompt)
+            await message.answer(self.get_language(message).update_info_prompt(),
+                                 parse_mode='Markdown')
+
+        @self.dp.message(Command("finish"))
+        async def handler(message: Message, state: FSMContext):
+            await message.answer(self.get_language(message).prompts_settings_finish(),
+                                 reply_markup=ReplyKeyboardRemove(),
+                                 parse_mode='Markdown')
 
         # Feedback
         @self.dp.message(Command("feedback"))
@@ -212,27 +251,11 @@ class GameBot:
             await message.answer(self.get_language(message).feedback(),
                                  parse_mode='Markdown')
 
-        @self.dp.message(GameBot.States.feedback)
-        @log(game_logging.feedback, level='WARNING')
-        async def handler(message: Message, state: FSMContext):
-            await self.return_to_state(message, state)
-            await self.get_user(message).get_game().history.feedback(message.text)
-            await message.answer(self.get_language(message).feedback_thanks(),
-                                 parse_mode='Markdown')
-
-        # Complaint
+        # Report
         @self.dp.message(Command("report"))
         async def handler(message: Message, state: FSMContext):
-            await state.set_state(GameBot.States.bug_report)
-            await message.answer(self.get_language(message).bug_report(),
-                                 parse_mode='Markdown')
-
-        @self.dp.message(GameBot.States.bug_report)
-        @log(game_logging.complain, level='WARNING')
-        async def handler(message: Message, state: FSMContext):
-            await self.return_to_state(message, state)
-            await self.get_user(message).get_game().history.bug_report(message.text)
-            await message.answer(self.get_language(message).bug_report_thanks(),
+            await state.set_state(GameBot.States.report)
+            await message.answer(self.get_language(message).report(),
                                  parse_mode='Markdown')
 
         # Info
@@ -330,7 +353,7 @@ class GameBot:
 
         @self.dp.message(Command("history"))
         async def handler(message: Message, state: FSMContext):
-            await message.answer(self.get_language(message).history(),
+            await message.answer(self.get_language(message).write(),
                                  reply_markup=get_history_menu(),
                                  parse_mode='Markdown')
 
@@ -393,7 +416,7 @@ class GameBot:
         async def handler(message: Message, state: FSMContext):
             game = self.get_user(message).get_game()
             if game:
-                await self.send_long_message(message, game.settings_prompt)
+                await self.send_long_message(message, game.settings)
 
         @self.dp.message(GameBot.States.admin_mode, Command("set_openai"))
         @log(game_logging.openai_log)
@@ -448,6 +471,92 @@ class GameBot:
 
             await temporary_message.delete()
 
+            # States
+            # Story Settings
+            @self.dp.message(GameBot.States.settings)
+            @log(game_logging.set_basic_log)
+            async def handler(message: Message, state: FSMContext):
+                await self.return_to_state(message, state)
+                await self.get_user(message).get_game().set_basic_settings(message.text)
+                await message.answer(self.get_language(message).story_settings_finish(),
+                                     parse_mode='Markdown')
+
+            # Prompts settings
+            @self.dp.message(GameBot.States.role_prompt)
+            async def handler(message: Message, state: FSMContext):
+                await self.return_to_state(message, state)
+                await self.get_user(message).get_game().set_role_prompt(message.text)
+                await message.answer(self.get_language(message).edit_prompt(),
+                                     parse_mode='Markdown')
+
+            @self.dp.message(GameBot.States.start_prompt)
+            async def handler(message: Message, state: FSMContext):
+                await self.return_to_state(message, state)
+                await self.get_user(message).get_game().set_start_prompt(message.text)
+                await message.answer(self.get_language(message).edit_prompt(),
+                                     parse_mode='Markdown')
+
+            @self.dp.message(GameBot.States.move_prompt)
+            async def handler(message: Message, state: FSMContext):
+                await self.return_to_state(message, state)
+                await self.get_user(message).get_game().set_move_prompt(message.text)
+                await message.answer(self.get_language(message).edit_prompt(),
+                                     parse_mode='Markdown')
+
+            @self.dp.message(GameBot.States.rule_prompt)
+            async def handler(message: Message, state: FSMContext):
+                await self.return_to_state(message, state)
+                await self.get_user(message).get_game().set_rule_prompt(message.text)
+                await message.answer(self.get_language(message).edit_prompt(),
+                                     parse_mode='Markdown')
+
+            @self.dp.message(GameBot.States.past_prompt)
+            async def handler(message: Message, state: FSMContext):
+                await self.return_to_state(message, state)
+                await self.get_user(message).get_game().set_past_prompt(message.text)
+                await message.answer(self.get_language(message).edit_prompt(),
+                                     parse_mode='Markdown')
+
+            @self.dp.message(GameBot.States.info_template)
+            async def handler(message: Message, state: FSMContext):
+                await self.return_to_state(message, state)
+                await self.get_user(message).get_game().set_info_template(message.text)
+                await message.answer(self.get_language(message).edit_prompt(),
+                                     parse_mode='Markdown')
+
+            @self.dp.message(GameBot.States.create_info_prompt)
+            async def handler(message: Message, state: FSMContext):
+                await self.return_to_state(message, state)
+                await self.get_user(message).get_game().set_create_info_prompt(message.text)
+                await message.answer(self.get_language(message).edit_prompt(),
+                                     parse_mode='Markdown')
+
+            @self.dp.message(GameBot.States.update_info_prompt)
+            async def handler(message: Message, state: FSMContext):
+                await self.return_to_state(message, state)
+                await self.get_user(message).get_game().set_update_info_prompt(message.text)
+                await message.answer(self.get_language(message).edit_prompt(),
+                                     parse_mode='Markdown')
+
+            # Feedback
+            @self.dp.message(GameBot.States.feedback)
+            @log(game_logging.feedback, level='WARNING')
+            async def handler(message: Message, state: FSMContext):
+                await self.return_to_state(message, state)
+                await self.get_user(message).get_game().write.feedback(message.text)
+                await message.answer(self.get_language(message).feedback_thanks(),
+                                     parse_mode='Markdown')
+
+            # Report
+            @self.dp.message(GameBot.States.report)
+            @log(game_logging.complain, level='WARNING')
+            async def handler(message: Message, state: FSMContext):
+                await self.return_to_state(message, state)
+                await self.get_user(message).get_game().write.report(message.text)
+                await message.answer(self.get_language(message).bug_report_thanks(),
+                                     parse_mode='Markdown')
+
+        # Other
         # Move
         @self.dp.message()
         async def handler(message: Message, state: FSMContext):

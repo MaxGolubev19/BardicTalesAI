@@ -1,6 +1,6 @@
 import random
 
-systemStory = (
+rolePrompt = (
     'Ты рассказчик интерактивной истории от второго лица, создающий короткие эпизоды '
     'на основе действий главного героя, которого отыгрывает пользователь'
 )
@@ -75,7 +75,7 @@ pastPrompt = (
     'Не сокращай историю слишком сильно, результат должен содержать как можно больше деталей для лучшего качества.'
 )
 
-infoPrompt = (
+infoTemplate = (
     'Основная информация:\n\n'
 
     'Текущее местоположение:\n'
@@ -123,20 +123,6 @@ updateInfoPrompt = (
     'Убедись, что формат строго соблюден. '
     'В ответе верни только обновленную форму и ничего больше.'
 )
-
-
-def settingPrompt(s: str | None) -> str:
-    if s is None:
-        s = random.choices([randomGenre(genre[0]) for genre in genres] +
-                           [randomSetting(setting[0]) for setting in settings],
-                           weights=[genre[1] for genre in genres] + [setting[1] for setting in settings],
-                           k=1
-                           )[0]
-    return f'Пожелания игрока:\n{s}'
-
-
-def randomGenre(genre): return f'История в жанре "{genre}"'
-def randomSetting(setting): return f'История в сеттинге "{setting}"'
 
 
 genres = [
@@ -197,3 +183,21 @@ settings = [
     ("Викторианский", 6),
     ("Дикий Запад", 7)
 ]
+
+
+def randomSettings() -> str:
+    return random.choices([randomGenre(genre[0]) for genre in genres] +
+                          [randomSetting(setting[0]) for setting in settings],
+                          weights=[genre[1] for genre in genres] + [setting[1] for setting in settings],
+                          k=1
+                          )[0]
+
+
+def randomGenre(genre): return f'История в жанре "{genre}"'
+def randomSetting(setting): return f'История в сеттинге "{setting}"'
+
+
+settingsPrompt = (
+    'Пожелания игрока:\n'
+    f'{randomSettings()}'
+)

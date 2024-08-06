@@ -42,65 +42,94 @@ def help_admin(): return (
     '/cancel - cancel the current action\n\n'
 
     '*Admin mode*\n'
+    '/get\_settings - get current settings\n'
     '/get\_time - get the average user wait time\n'
-    '/get\_settings - get current settings'
 )
 
 
 def settings(): return (
-    'Here you can customize your game\n\n'
-    
-    '*Basic Settings*\n'
-    'Describe the story you would like to be the hero of.\n\n'
+    'Here you can configure the game\n\n'
+
+    '*Story Settings*\n'
+    'Describe the kind of story you\'d like to be the hero of.\n\n'
 
     '*Random Settings*\n'
-    'Sets random basic settings\n\n'
-
-    # '*Advanced Settings*\n'
-    # 'Setting up prompts\n\n'
+    'Sets random story settings\n\n'
+    
+    '*Prompt Settings*\n'
+    'Configure the prompts used in story generation\n\n'
 )
 
 
-def basic_start(): return (
+def story_settings(): return (
     '_What kind of story would you like to be the hero of? '
-    'The more detailed your description, the better the game will match your expectations._'
+    'The more detailed your description, the better the game will match your preferences_'
 )
 
 
-def basic_finish(): return '_Story set!_'
+def story_settings_finish(): return '_The story is set!_'
+
+
+def prompts_settings(): return (
+    '_Here you can configure the bot by changing the prompts it uses_'
+)
+
+
+def role_prompt(): return (
+    '_Enter the role for the AI '
+    '(default is interactive story narrator)_'
+)
 
 
 def start_prompt(): return (
-    '_Enter the starting prompt. '
-    'It will be used to generate the beginning of the story. '
-    'If you want to skip this step, send "-"._'
+    '_Enter the initial prompt. '
+    'It will be used to generate the beginning of the story_'
 )
 
 
 def move_prompt(): return (
     '_Enter the prompt for generating a new episode. '
-    'It will be used to create episodes based on the player\'s actions (except the first one). '
-    'If you want to skip this step, send "-"._'
+    'It will be used to create episodes based on the player\'s actions (except for the first one)_'
 )
 
 
 def rule_prompt(): return (
     '_Describe the rules that limit the player\'s actions '
-    '(by default, the player can only control their character and '
-    'use what has been mentioned in the story). '
-    'If you want to skip this step, send "-"._'
+    '(default: the player can only control their character and use what has been mentioned in the story)_'
 )
 
 
-def prompts_finish(): return '_Advanced settings set_'
+def past_prompt(): return (
+    '_Enter the prompt for summarizing past events. '
+    'The bot fully remembers only the last 5 episodes_'
+)
 
 
-def feedback(): return '_Please share your thoughts or suggestions so we can improve our service._'
+def info_template(): return (
+    '_Enter the template for storing key information about the story_'
+)
+
+
+def create_info_prompt(): return (
+    '_Enter the prompt for filling in key information about the story_'
+)
+
+
+def update_info_prompt(): return (
+    '_Enter the prompt for updating key information about the story_'
+)
+
+
+def edit_prompt(): return '_Prompt has been changed_'
+def prompts_settings_finish(): return '_Prompts have been configured_'
+
+
+def feedback(): return '_Please share your thoughts or suggestions so we can improve our service_'
 
 
 def feedback_thanks(): return (
     '_Thank you for your feedback! '
-    'We will consider your suggestions and strive to improve our service._'
+    'We will consider your suggestions and strive to improve our service_'
 )
 
 
@@ -109,7 +138,7 @@ def bug_report(): return '_Please describe the bug you encountered_'
 
 def bug_report_thanks(): return (
     '_Thank you for reporting the bug! '
-    'We will work on fixing it as soon as possible._'
+    'We will work on fixing it as soon as possible_'
 )
 
 
@@ -181,7 +210,7 @@ def ollama(): return '_API changed to ollama_'
 
 def wait(): return (
     '_Please wait while the AI generates a response. '
-    'This may take some time._'
+    'This may take some time_'
 )
 
 

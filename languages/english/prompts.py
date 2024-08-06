@@ -1,7 +1,7 @@
 import random
 
 
-systemStory = (
+rolePrompt = (
     'You are the narrator of an interactive story in the second person, '
     'creating short episodes based on the actions of the main character, who is played by the user'
 )
@@ -75,7 +75,7 @@ pastPrompt = (
     'Don\'t shorten the story too much, the result should contain as much detail as possible for the best quality.'
 )
 
-infoPrompt = (
+infoTemplate = (
     'Main information:\n\n'
     
     'Current location:\n'
@@ -123,20 +123,6 @@ updateInfoPrompt = (
     'Ensure the format is strictly followed. '
     'In the response, return only the updated form and nothing more.'
 )
-
-
-def settingPrompt(s: str | None) -> str:
-    if s is None:
-        s = random.choices([randomGenre(genre[0]) for genre in genres] +
-                           [randomSetting(setting[0]) for setting in settings],
-                           weights=[genre[1] for genre in genres] + [setting[1] for setting in settings],
-                           k=1
-                           )[0]
-    return f'User\'s preferences:\n{s}'
-
-
-def randomGenre(genre): return f'A story in the genre of "{genre}"'
-def randomSetting(setting): return f'A story in the setting of "{setting}"'
 
 
 genres = [
@@ -197,3 +183,21 @@ settings = [
     ("Victorian", 6),
     ("Wild West", 7)
 ]
+
+
+def randomSettings() -> str:
+    return random.choices([randomGenre(genre[0]) for genre in genres] +
+                          [randomSetting(setting[0]) for setting in settings],
+                          weights=[genre[1] for genre in genres] + [setting[1] for setting in settings],
+                          k=1
+                          )[0]
+
+
+def randomGenre(genre): return f'A story in the genre of "{genre}"'
+def randomSetting(setting): return f'A story in the setting of "{setting}"'
+
+
+settingsPrompt = (
+    'User\'s preferences:\n'
+    f'{randomSettings()}'
+)
