@@ -9,7 +9,7 @@ if sys.platform == 'win32':
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s',
-                    stream=open('info/log.txt', 'a'))
+                    stream=sys.stdout)
 
 
 async def main():

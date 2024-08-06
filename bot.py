@@ -19,7 +19,7 @@ from writing.write import Write
 
 
 class GameBot:
-    user_file = 'info/users_data.pkl'
+    user_file = 'data/users_data.pkl'
     users: Dict[int, GameUser] = {}
 
     all_time = 0
