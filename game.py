@@ -57,37 +57,37 @@ class Game:
 
         return self
 
-    def set_settings(self, settings: str):
+    async def set_basic_settings(self, settings: str):
         self.settings = settings
         self.settings_prompt = self.get_prompts().settingPrompt(self.settings)
-        self.history.set_settings(self.settings)
+        await self.history.set_settings(self.settings)
         return self
 
-    def set_genre(self):
+    async def set_random_settings(self):
         self.settings = None
         self.settings_prompt = self.get_prompts().settingPrompt(self.settings)
-        self.history.set_settings(self.settings_prompt)
+        await self.history.set_settings(self.settings_prompt)
         return self
 
-    def set_start_prompt(self, start_prompt: str):
+    async def set_start_prompt(self, start_prompt: str):
         if start_prompt != '-':
             self.start_prompt = start_prompt
             self.edit_start_prompt = True
-            self.history.set_start_prompt(start_prompt)
+            await self.history.set_start_prompt(start_prompt)
         return self
 
-    def set_move_prompt(self, move_prompt: str):
+    async def set_move_prompt(self, move_prompt: str):
         if move_prompt != '-':
             self.move_prompt = move_prompt
             self.edit_move_prompt = True
-            self.history.set_move_prompt(move_prompt)
+            await self.history.set_move_prompt(move_prompt)
         return self
 
-    def set_rule_prompt(self, rule_prompt: str):
+    async def set_rule_prompt(self, rule_prompt: str):
         if rule_prompt != '-':
             self.rule_prompt = rule_prompt
             self.edit_rule_prompt = True
-            self.history.set_rule_prompt(rule_prompt)
+            await self.history.set_rule_prompt(rule_prompt)
         return self
 
     def set_parental_control(self, parental_control: bool):
@@ -133,7 +133,7 @@ class Game:
 
         self.answers[0] = answer
 
-        self.history.move('User', answer)
+        await self.history.move('User', answer)
         self.wait = 1
 
         await self.generate_now(answer)
@@ -274,7 +274,7 @@ class Game:
 
         result = await self.current_task
         self.current_task = None
-        self.history.move(role, result)
+        await self.history.move(role, result)
         return result
 
     def get_patterns(self):

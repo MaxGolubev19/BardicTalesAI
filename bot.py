@@ -15,6 +15,7 @@ from writing import game_logging
 from writing.decorators import log
 from ai import AI
 from game_user import GameUser
+from writing.write import Write
 
 
 class GameBot:
@@ -41,8 +42,12 @@ class GameBot:
     def __init__(self):
         self.bot = Bot(token=os.environ.get('BOT_TOKEN'))
         self.dp = Dispatcher()
-        self.register_handlers()
+
+        Write.send_feedback = self.send_feedback
+        Write.send_history = self.send_history
+
         atexit.register(self.save_users)
+        self.register_handlers()
 
         self.users = {}
         self.load_users()
@@ -83,6 +88,12 @@ class GameBot:
                      f'{time_working // 60}:{(time_working % 60):02}')
         self.all_time += time_working
         self.all_moves += 1
+
+    async def send_history(self, message: str):
+        await self.bot.send_message(chat_id=-1002178954297, text=message)
+
+    async def send_feedback(self, message: str):
+        await self.bot.send_message(chat_id=-1002246159913, text=message)
 
     def register_handlers(self) -> None:
         # Cancel
@@ -126,7 +137,7 @@ class GameBot:
         @self.dp.message(Command("random_settings"))
         @log(game_logging.set_basic_log)
         async def handler(message: Message, state: FSMContext):
-            self.get_user(message).get_game().set_genre()
+            await self.get_user(message).get_game().set_random_settings()
             await message.answer(self.get_language(message).basic_finish(),
                                  reply_markup=ReplyKeyboardRemove(),
                                  parse_mode='Markdown')
@@ -144,7 +155,7 @@ class GameBot:
         @log(game_logging.set_basic_log)
         async def handler(message: Message, state: FSMContext):
             await self.return_to_state(message, state)
-            self.get_user(message).get_game().set_settings(message.text)
+            await self.get_user(message).get_game().set_basic_settings(message.text)
             await message.answer(self.get_language(message).basic_finish(),
                                  parse_mode='Markdown')
 
@@ -205,7 +216,7 @@ class GameBot:
         @log(game_logging.feedback, level='WARNING')
         async def handler(message: Message, state: FSMContext):
             await self.return_to_state(message, state)
-            self.get_user(message).get_game().history.feedback(message.text)
+            await self.get_user(message).get_game().history.feedback(message.text)
             await message.answer(self.get_language(message).feedback_thanks(),
                                  parse_mode='Markdown')
 
@@ -220,7 +231,7 @@ class GameBot:
         @log(game_logging.complain, level='WARNING')
         async def handler(message: Message, state: FSMContext):
             await self.return_to_state(message, state)
-            self.get_user(message).get_game().history.bug_report(message.text)
+            await self.get_user(message).get_game().history.bug_report(message.text)
             await message.answer(self.get_language(message).bug_report_thanks(),
                                  parse_mode='Markdown')
 
