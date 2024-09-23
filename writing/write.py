@@ -23,29 +23,26 @@ class Write:
     async def set_settings(self, settings: str) -> None:
         await self.write_message('Settings', settings)
 
-    async def set_role_prompt(self, role_prompt: str) -> None:
-        await self.write_message('RolePrompt', role_prompt)
+    async def set_start_prompt(self, prompt: str) -> None:
+        await self.write_message('StartPrompt', prompt)
 
-    async def set_start_prompt(self, start_prompt: str) -> None:
-        await self.write_message('StartPrompt', start_prompt)
+    async def set_move_prompt(self, prompt: str) -> None:
+        await self.write_message('MovePrompt', prompt)
 
-    async def set_move_prompt(self, move_prompt: str) -> None:
-        await self.write_message('MovePrompt', move_prompt)
+    async def set_future_prompt(self, prompt: str) -> None:
+        await self.write_message('FuturePrompt', prompt)
 
-    async def set_rule_prompt(self, rule_prompt: str) -> None:
-        await self.write_message('RulePrompt', rule_prompt)
+    async def set_past_prompt(self, prompt: str) -> None:
+        await self.write_message('PastPrompt', prompt)
 
-    async def set_past_prompt(self, past_prompt: str) -> None:
-        await self.write_message('PastPrompt', past_prompt)
+    async def set_create_info_prompt(self, prompt: str) -> None:
+        await self.write_message('CreateInfoPrompt', prompt)
 
-    async def set_info_template(self, info_template: str) -> None:
-        await self.write_message('InfoTemplate', info_template)
+    async def set_update_info_prompt(self, prompt: str) -> None:
+        await self.write_message('UpdateInfoPrompt', prompt)
 
-    async def set_create_info_prompt(self, create_info_prompt: str) -> None:
-        await self.write_message('CreateInfoPrompt', create_info_prompt)
-
-    async def set_update_info_prompt(self, update_info_prompt: str) -> None:
-        await self.write_message('UpdateInfoPrompt', update_info_prompt)
+    async def set_info_template(self, prompt: str) -> None:
+        await self.write_message('InfoTemplate', prompt)
 
     async def move(self, role: str, content: str) -> None:
         await self.write_message(role, content)

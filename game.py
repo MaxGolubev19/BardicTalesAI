@@ -2,8 +2,10 @@ import asyncio
 
 from ai import AI
 from writing.write import Write
-from languages.english import patterns as english_patterns, prompts as english_prompts
-from languages.russian import patterns as russian_patterns, prompts as russian_prompts
+
+from languages import get_prompts
+from languages.english import patterns as english_patterns
+from languages.russian import patterns as russian_patterns
 
 
 class Game:
@@ -15,33 +17,29 @@ class Game:
         self.user_name = user_name
         self.language = language
 
-        self.settings = self.get_prompts().settingsPrompt
-        self.role_prompt = self.get_prompts().rolePrompt
-        self.start_prompt = self.get_prompts().startPrompt
-        self.move_prompt = self.get_prompts().movePrompt
-        self.rule_prompt = self.get_prompts().rulePrompt
-        self.past_prompt = self.get_prompts().pastPrompt
-        self.info_template = self.get_prompts().infoTemplate
-        self.create_info_prompt = self.get_prompts().createInfoPrompt
-        self.update_info_prompt = self.get_prompts().updateInfoPrompt
+        self.settings = get_prompts.settingsPrompt(self.language)
+        self.start_prompt = get_prompts.startPrompt(self.language)
+        self.future_prompt = get_prompts.futurePrompt(self.language)
+        self.move_prompt = get_prompts.movePrompt(self.language)
+        self.past_prompt = get_prompts.pastPrompt(self.language)
+        self.create_info_prompt = get_prompts.createInfoPrompt(self.language)
+        self.update_info_prompt = get_prompts.updateInfoPrompt(self.language)
+        self.info_template = get_prompts.infoTemplate(self.language)
 
         self.edit_settings = False
-        self.edit_role_prompt = False
         self.edit_start_prompt = False
         self.edit_move_prompt = False
-        self.edit_rule_prompt = False
+        self.edit_future_prompt = False
         self.edit_past_prompt = False
-        self.edit_info_template = False
         self.edit_create_info_prompt = False
         self.edit_update_info_prompt = False
+        self.edit_info_template = False
 
         self.parental_control = True
 
-        self.now = None
-        self.past = None
+        self.future = None
+        self.past = [None for _ in range(Game.HISTORY_SIZE * 2 + 1)]
         self.info = None
-        self.lasts = [None for _ in range(Game.HISTORY_SIZE)]
-        self.answers = [None for _ in range(Game.HISTORY_SIZE)]
 
         self.past_relevant = True
         self.info_relevant = True
@@ -54,31 +52,28 @@ class Game:
         self.language = language
 
         if not self.edit_settings:
-            self.settings = self.get_prompts().settingsPrompt
-
-        if not self.edit_role_prompt:
-            self.role_prompt = self.get_prompts().rolePrompt
+            self.settings = get_prompts.settingsPrompt(self.language)
 
         if not self.edit_start_prompt:
-            self.start_prompt = self.get_prompts().startPrompt
+            self.start_prompt = get_prompts.startPrompt(self.language)
 
         if not self.edit_move_prompt:
-            self.move_prompt = self.get_prompts().movePrompt
+            self.move_prompt = get_prompts.movePrompt(self.language)
 
-        if not self.edit_rule_prompt:
-            self.rule_prompt = self.get_prompts().rulePrompt
+        if not self.edit_future_prompt:
+            self.future_prompt = get_prompts.futurePrompt(self.language)
 
         if not self.edit_past_prompt:
-            self.past_prompt = self.get_prompts().pastPrompt
-
-        if not self.edit_info_template:
-            self.info_template = self.get_prompts().infoTemplate
+            self.past_prompt = get_prompts.pastPrompt(self.language)
 
         if not self.edit_create_info_prompt:
-            self.create_info_prompt = self.get_prompts().createInfoPrompt
+            self.create_info_prompt = get_prompts.createInfoPrompt(self.language)
 
         if not self.edit_update_info_prompt:
-            self.update_info_prompt = self.get_prompts().updateInfoPrompt
+            self.update_info_prompt = get_prompts.updateInfoPrompt(self.language)
+
+        if not self.edit_info_template:
+            self.info_template = get_prompts.infoTemplate(self.language)
 
         return self
 
@@ -89,15 +84,9 @@ class Game:
         return self
 
     async def set_random_settings(self):
-        self.settings = self.get_prompts().settingsPrompt
+        self.settings = get_prompts.settingsPrompt(self.language)
         self.edit_settings = False
         await self.write.set_settings(self.settings)
-        return self
-
-    async def set_role_prompt(self, role_prompt: str):
-        self.role_prompt = role_prompt
-        self.edit_role_prompt = True
-        await self.write.set_role_prompt(role_prompt)
         return self
 
     async def set_start_prompt(self, start_prompt: str):
@@ -106,40 +95,40 @@ class Game:
         await self.write.set_start_prompt(start_prompt)
         return self
 
-    async def set_move_prompt(self, move_prompt: str):
-        self.move_prompt = move_prompt
+    async def set_move_prompt(self, prompt: str):
+        self.move_prompt = prompt
         self.edit_move_prompt = True
-        await self.write.set_move_prompt(move_prompt)
+        await self.write.set_move_prompt(prompt)
         return self
 
-    async def set_rule_prompt(self, rule_prompt: str):
-        self.rule_prompt = rule_prompt
-        self.edit_rule_prompt = True
-        await self.write.set_rule_prompt(rule_prompt)
+    async def set_future_prompt(self, prompt: str):
+        self.future_prompt = prompt
+        self.edit_future_prompt = True
+        await self.write.set_future_prompt(prompt)
         return self
 
-    async def set_past_prompt(self, past_prompt: str):
-        self.past_prompt = past_prompt
+    async def set_past_prompt(self, prompt: str):
+        self.past_prompt = prompt
         self.edit_past_prompt = True
-        await self.write.set_past_prompt(past_prompt)
+        await self.write.set_past_prompt(prompt)
         return self
 
-    async def set_info_template(self, info_template: str):
-        self.info_template = info_template
-        self.edit_info_template = True
-        await self.write.set_info_template(info_template)
-        return self
-
-    async def set_create_info_prompt(self, create_info_prompt: str):
-        self.create_info_prompt = create_info_prompt
+    async def set_create_info_prompt(self, prompt: str):
+        self.create_info_prompt = prompt
         self.edit_create_info_prompt = True
-        await self.write.set_create_info_prompt(create_info_prompt)
+        await self.write.set_create_info_prompt(prompt)
         return self
 
-    async def set_update_info_prompt(self, update_info_prompt: str):
-        self.update_info_prompt = update_info_prompt
+    async def set_update_info_prompt(self, prompt: str):
+        self.update_info_prompt = prompt
         self.edit_update_info_prompt = True
-        await self.write.set_update_info_prompt(update_info_prompt)
+        await self.write.set_update_info_prompt(prompt)
+        return self
+
+    async def set_info_template(self, prompt: str):
+        self.info_template = prompt
+        self.edit_info_template = True
+        await self.write.set_info_template(prompt)
         return self
 
     def set_parental_control(self, parental_control: bool):
@@ -157,163 +146,92 @@ class Game:
         if self.current_task is not None:
             self.current_task.cancel()
 
-        if not self.edit_settings:
-            self.settings = self.get_prompts().settingsPrompt
-
-        self.past_relevant = True
-        self.info_relevant = True
-
-        self.now = None
-        self.past = None
-        self.info = None
-        self.lasts = [None for _ in range(5)]
-        self.answers = [None for _ in range(5)]
-
-        self.count = 0
         self.wait = 1
+        self.count = 1
+        self.past_relevant = False
+        self.info_relevant = False
 
-        await self.generate_now()
+        self.future = None
+        self.past = [None for _ in range(Game.HISTORY_SIZE * 2 + 1)]
+        self.info = None
+
+        if not self.edit_settings:
+            self.settings = get_prompts.settingsPrompt(self.language)
+
+        now = await self.createTaskAI([
+            AI.format(self.start_prompt, 'system'),
+            AI.format(self.settings, 'user'),
+        ], 'now', 'Bot')
 
         self.wait = 0
-        return self.now
+        return now
 
     async def move(self, answer: str) -> str:
         while self.current_task is not None:
             await asyncio.sleep(0.1)
 
-        for i in range(Game.HISTORY_SIZE - 2, -1, -1):
-            self.answers[i + 1] = self.answers[i]
-
-        self.answers[0] = answer
-
-        await self.write.move('User', answer)
         self.wait = 1
-
-        await self.generate_now(answer)
-
-        self.wait = 0
-        return self.now
-
-    async def generate_now(self, answer: str = None) -> None:
         self.past_relevant = False
         self.info_relevant = False
 
-        if self.count == 0:
-            messages = [
-                AI.format(self.get_prompts().rolePrompt, 'system'),
-                AI.format(self.start_prompt, 'user'),
-                AI.format('Send me the user\'s preferences.', 'assistant'),
-                AI.format(self.settings, 'user'),
-            ]
+        self.past[0] = AI.format(answer, 'user')
+        await self.write.move('User', answer)
 
-        elif self.count == 1:
-            messages = [
-                AI.format(self.get_prompts().rolePrompt, 'system'),
-                AI.format(self.move_prompt, 'user'),
-                # AI.format('Send me the rules.', 'assistant'),
-                AI.format(self.rule_prompt, 'user'),
-                # AI.format('Send me the user\'s preferences.', 'assistant'),
-                AI.format(self.settings, 'user'),
-                # AI.format('Send me the main information.', 'assistant'),
-                AI.format(self.info, 'user'),
-                AI.format(self.now, 'assistant'),
-                AI.format(answer, 'user'),
-            ]
+        now = await self.createTaskAI([
+            AI.format(self.move_prompt, 'system'),
+            AI.format(self.settings, 'user'),
+            AI.format(self.info, 'user'),
+            AI.format(self.future, 'user'),
+            *self.past[:(self.count - 1) * 2][::-1],
+        ], 'now', 'Bot')
 
-        elif 2 <= self.count <= Game.HISTORY_SIZE + 1:
-            messages = [
-                AI.format(self.get_prompts().rolePrompt, 'system'),
-                AI.format(self.move_prompt, 'user'),
-                # AI.format('Send me the rules.', 'assistant'),
-                AI.format(self.rule_prompt, 'user'),
-                # AI.format('Send me the user\'s preferences.', 'assistant'),
-                AI.format(self.settings, 'user'),
-                # AI.format('Send me the main information.', 'assistant'),
-                AI.format(self.info, 'user'),
-                *[i for j in [
-                    (AI.format(self.lasts[i], 'assistant'),
-                     AI.format(self.answers[i], 'user'))
-                    for i in range(self.count - 2, -1, -1)
-                ] for i in j],
-                AI.format(self.now, 'assistant'),
-                AI.format(answer, 'user'),
-            ]
+        # TODO
+        if now[-8:].lower() == 'the end!' or now[-6:].lower() == 'конец!':
+            self.count = 0
 
-        else:
-            messages = [
-                AI.format(self.get_prompts().rolePrompt, 'system'),
-                AI.format(self.move_prompt, 'user'),
-                # AI.format('Send me the rules.', 'assistant'),
-                AI.format(self.rule_prompt, 'user'),
-                # AI.format('Send me the user\'s preferences.', 'assistant'),
-                AI.format(self.settings, 'user'),
-                # AI.format('Send me the main information.', 'assistant'),
-                AI.format(self.info, 'user'),
-                # AI.format('Send me the brief summary of past events.', 'assistant'),
-                AI.format(self.past, 'user'),
-                *[i for j in [
-                    (AI.format(self.lasts[i], 'assistant'),
-                     AI.format(self.answers[i], 'user'))
-                    for i in range(Game.HISTORY_SIZE - 1, -1, -1)
-                ] for i in j],
-                AI.format(self.now, 'assistant'),
-                AI.format(answer, 'user'),
-            ]
+        self.wait = 0
+        return now
 
-        self.now = await self.createTaskAI(messages, 'now', 'Bot')
+    async def other(self, now: str):
+        if self.count == 1:
+            await self.generate_future(now)
 
-        if self.now[-8:].lower() == 'the end!' or self.now[-6:].lower() == 'конец!':
-            self.count = -1
-
-    async def other(self):
-        await self.generate_past()
-
-        for i in range(Game.HISTORY_SIZE - 2, -1, -1):
-            if self.lasts[i] is not None:
-                self.lasts[i + 1] = self.lasts[i]
-
-        self.lasts[0] = self.now
-
-        await self.generate_info()
+        await self.generate_past(now)
+        await self.generate_info(now)
         self.count += 1
 
-    async def generate_past(self):
-        if self.count < Game.HISTORY_SIZE:
-            self.past = None
-        elif self.count == Game.HISTORY_SIZE:
-            self.past = self.lasts[Game.HISTORY_SIZE - 1]
-        else:
-            self.past = await self.createTaskAI([
-                AI.format(self.get_prompts().pastPrompt, 'user'),
-                # AI.format('Send me the previous part of the story.', 'assistant'),
-                AI.format(self.past, 'user'),
-                # AI.format('Send me the latest episode', 'assistant'),
-                AI.format(self.lasts[Game.HISTORY_SIZE - 1], 'user'),
+    async def generate_future(self, now: str):
+        self.future = await self.createTaskAI([
+            AI.format(self.future_prompt, 'system'),
+            AI.format(self.settings, 'user'),
+            AI.format(now, 'user'),
+        ], 'future', 'Future')
+
+    async def generate_past(self, now):
+        if self.count == Game.HISTORY_SIZE + 1:
+            self.past[-1] = self.past[-3]
+
+        elif self.count > Game.HISTORY_SIZE + 1:
+            self.past[-1] = await self.createTaskAI([
+                AI.format(self.past_prompt, 'system'),
+                AI.format(self.past[-1], 'user'),
+                AI.format(self.past[-2], 'user'),
             ], 'past', 'Past')
 
+        for i in range(Game.HISTORY_SIZE - 1, 0, -1):
+            self.past[i * 2] = self.past[i * 2 - 2]
+            self.past[i * 2 + 1] = self.past[i * 2 - 1]
+
+        self.past[1] = AI.format(now, 'assistant')
         self.past_relevant = True
 
-    async def generate_info(self):
-        match self.count:
-            case 0:
-                messages = [
-                    AI.format(self.get_prompts().createInfoPrompt, 'user'),
-                    # AI.format('Send me the template for the main information.', 'assistant'),
-                    AI.format(self.get_prompts().infoTemplate, 'user'),
-                    # AI.format('Send me the beginning of the story.', 'assistant'),
-                    AI.format(self.now, 'user'),
-                ]
+    async def generate_info(self, now):
+        self.info = await self.createTaskAI([
+            AI.format(self.create_info_prompt if self.count == 1 else self.update_info_prompt, 'system'),
+            AI.format(self.info_template, 'user'),
+            AI.format(now, 'user'),
+        ], 'info', 'Info')
 
-            case _:
-                messages = [
-                    AI.format(self.get_prompts().updateInfoPrompt, 'user'),
-                    # AI.format('Send me the main information.', 'assistant'),
-                    AI.format(self.info, 'user'),
-                    # AI.format('Send me the new episode of the story.', 'assistant'),
-                    AI.format(self.now, 'user'),
-                ]
-
-        self.info = await self.createTaskAI(messages, 'info', 'Info')
         self.info_relevant = True
 
     async def createTaskAI(self, messages: list, typeRequest: str, role: str) -> str:
@@ -336,21 +254,6 @@ class Game:
                 return english_patterns
             case 'Russian':
                 return russian_patterns
-
-    def get_prompts(self):
-        match self.language:
-            case 'English':
-                return english_prompts
-            case 'Russian':
-                return russian_prompts
-
-    def get_past(self):
-        if self.past is None:
-            return self.get_patterns().not_generate()
-        elif self.info_relevant:
-            return self.past
-        else:
-            return f'{self.get_patterns().old_information()}\n\n{self.past}'
 
     def get_info(self):
         if self.info is None:

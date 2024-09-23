@@ -75,12 +75,6 @@ def prompts_settings(): return (
 )
 
 
-def role_prompt(): return (
-    '_Enter the role for the AI '
-    '(default is interactive story narrator)_'
-)
-
-
 def start_prompt(): return (
     '_Enter the initial prompt. '
     'It will be used to generate the beginning of the story_'
@@ -93,20 +87,14 @@ def move_prompt(): return (
 )
 
 
-def rule_prompt(): return (
-    '_Describe the rules that limit the player\'s actions '
-    '(default: the player can only control their character and use what has been mentioned in the story)_'
+def future_prompt(): return (
+    '_Enter a prompt for developing the further plot._'
 )
 
 
 def past_prompt(): return (
     '_Enter the prompt for summarizing past events. '
     'The bot fully remembers only the last 5 episodes_'
-)
-
-
-def info_template(): return (
-    '_Enter the template for storing key information about the story_'
 )
 
 
@@ -117,6 +105,11 @@ def create_info_prompt(): return (
 
 def update_info_prompt(): return (
     '_Enter the prompt for updating key information about the story_'
+)
+
+
+def info_template(): return (
+    '_Enter the template for storing key information about the story_'
 )
 
 

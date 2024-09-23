@@ -1,0 +1,1 @@
+Get a retelling of the story and its new episode. Generate a new retelling based on this episode. Don't shorten the story too much, the result should contain as much detail as possible for the best quality.

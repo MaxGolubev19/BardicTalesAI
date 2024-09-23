@@ -7,10 +7,10 @@ from groq import AsyncGroq
 
 
 class AI:
-    llama_model = 'llama3'
-    uncensored_llama_model = 'dolphin-llama3'
     openai_model = 'gpt-4o-mini'
     groq_model = 'llama-3.1-70b-versatile'
+    llama_model = 'llama3'
+    uncensored_llama_model = 'dolphin-llama3'
 
     current_API = 'openai'
 
@@ -104,22 +104,3 @@ class AI:
             'role': role,
             'content': content,
         }
-
-    # @staticmethod
-    # def generateImage(prompt: str, forLogging: str = None) -> None:
-    #     print('start')
-    #     import torch
-    #     from diffusers import DiffusionPipeline
-    #     from PIL import Image
-    #
-    #     # Replace the model version with your required version if needed
-    #     pipeline = DiffusionPipeline.from_pretrained(
-    #         "stabilityai/stable-diffusion-2-1", torch_dtype=torch.float16
-    #     )
-    #
-    #     # Running the inference on GPU with cuda enabled
-    #     pipeline = pipeline.to('cuda')
-    #
-    #     image = pipeline(prompt=prompt).images[0]
-    #     image.show()
-    #     print('show')

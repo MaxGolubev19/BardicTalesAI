@@ -7,7 +7,7 @@ class GameUser:
     def __init__(self, user_id: int, user_name: str):
         self.id = user_id
         self.name = user_name
-        self.language = 'English'
+        self.language = 'english'
         self.admin = False
 
         self.game = Game(self.id, self.name, self.language)
@@ -21,10 +21,12 @@ class GameUser:
 
     def get_language(self):
         match self.language:
-            case 'English':
+            case 'english':
                 return english_patterns
-            case 'Russian':
+            case 'russian':
                 return russian_patterns
+            case _:
+                return english_patterns
 
     def set_language(self, language: str) -> None:
         self.language = language

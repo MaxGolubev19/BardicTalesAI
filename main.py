@@ -13,8 +13,7 @@ logging.basicConfig(level=logging.INFO,
 
 
 async def main():
-    bot = GameBot()
-    await bot.run()
+    await GameBot().run()
 
 
 if __name__ == "__main__":

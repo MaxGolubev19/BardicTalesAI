@@ -1,0 +1,33 @@
+Main information:
+
+Current location:
+<Describe the current location where the action is taking place>
+
+Characters:
+<List the characters involved in the story, including a brief description of each>
+
+Key events:
+<List the key events that have occurred in the story>
+
+
+Main character:
+Name:
+<Provide the name of the main character>
+
+Appearance:
+<Describe the main character's appearance>
+
+Motivations:
+<Describe the main character's motivations>
+
+Abilities:
+<List the main character's abilities>
+
+Clothing:
+<Describe the clothing worn by the main character>
+
+Weapons:
+<Describe the weapons carried by the main character>
+
+Inventory:
+<List the items in the main character's inventory>

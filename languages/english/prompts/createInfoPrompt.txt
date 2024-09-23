@@ -1,0 +1,1 @@
+Fill in the template for the main information about the story using the beginning of the story. Do not include information not explicitly mentioned in the text. Ensure the format is strictly followed. In the response, return only the filled form and nothing more.
