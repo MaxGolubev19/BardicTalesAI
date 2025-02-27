@@ -15,7 +15,7 @@ from languages import get_prompts
 from writing import game_logging
 from writing.decorators import log
 from writing.write import Write
-from game_user import GameUser
+from user import User
 from ai import AI
 
 
@@ -49,7 +49,7 @@ class GameBot:
         Write.send_history = self.send_history
 
         self.user_file = f'data/users.pkl'
-        self.users: Dict[int, GameUser] = {}
+        self.users: Dict[int, User] = {}
 
         atexit.register(self.save_users)
         self.register_handlers()
@@ -72,7 +72,7 @@ class GameBot:
 
     def get_user(self, message: Message):
         self.users[message.from_user.id] = self.users.get(message.from_user.id,
-                                                          GameUser(message.from_user.id, message.from_user.full_name))
+                                                          User(message.from_user.id, message.from_user.full_name))
         return self.users[message.from_user.id]
 
     def get_language(self, message: Message):

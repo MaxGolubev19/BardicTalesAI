@@ -3,7 +3,7 @@ from languages.russian import patterns as russian_patterns
 from game import Game
 
 
-class GameUser:
+class User:
     def __init__(self, user_id: int, user_name: str):
         self.id = user_id
         self.name = user_name
@@ -33,4 +33,4 @@ class GameUser:
         self.get_game().set_language(language)
 
     def reset(self):
-        return GameUser(self.id, self.name)
+        return User(self.id, self.name)

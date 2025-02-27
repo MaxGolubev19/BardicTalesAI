@@ -1,0 +1,4 @@
+aiogram==3.18.0
+dill==0.3.9
+groq==0.18.0
+openai==1.64.0
