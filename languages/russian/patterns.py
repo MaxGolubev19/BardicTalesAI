@@ -1,10 +1,14 @@
 def start(): return (
     '*Добро пожаловать в BardicTalesAI!*\n\n'
-    
+
     'В этом боте вы становитесь главным героем интерактивного повествования. '
     'Вы можете делать выборы и влиять на развитие сюжета.\n\n'
 
     'Чтобы начать, используйте /newgame. '
+    'Нажмите /story\_settings, чтобы ввести свои настройки, '
+    '/random\_settings — для случайного выбора настроек перед каждой игрой, '
+    'или выберите один из готовых жанров.\n\n'
+
     'Настройте историю с помощью /settings и узнайте больше через /help. '
     'Наслаждайтесь созданием своей уникальной истории!'
 )
@@ -31,7 +35,6 @@ def help_admin(): return (
     '/newgame - начать новую игру\n'
     '/settings - настроить историю\n'
     '/info - получить основную информацию о сюжете\n'
-    '/censorship - установить уровень цензуры\n'
     '/reset - сбросить настройки по умолчанию\n\n'
 
     '*Бот*\n'
@@ -43,7 +46,11 @@ def help_admin(): return (
 
     '*Admin mode*\n'
     '/get\_settings - получить текущие настройки\n'
+    '/get\_future - получить "карту" развития сюжета\n'
     '/get\_time - получить среднее время ожидания пользователей\n'
+    '/set\_gpt - переключить модель на gpt для всех пользователей (по умолчанию)\n'
+    '/set\_llama - переключить модель на llama для всех пользователей \n'
+    '/set\_gemini - переключить модель на gemini для всех пользователей \n'
 )
 
 
@@ -108,19 +115,27 @@ def update_info_prompt(): return (
 )
 
 
-def info_template(): return (
-    '_Введите шаблон для хранения основной информации об истории_'
+def templates_settings(): return (
+    '_Здесь вы можете настроить бота с помощью изменения шаблонов, которые тот использует_'
 )
 
 
+def start_template(): return '_Введите шаблон для первого эпизода_'
+def move_template(): return '_Введите шаблон для эпизода_'
+def future_template(): return '_Введите шаблон для продумывания дальнейшего сюжета_'
+def past_template(): return '_Введите промт для хранения предыдущих событий_'
+def info_template(): return '_Введите шаблон для хранения основной информации об истории_'
+
+
 def edit_prompt(): return '_Промт изменён_'
-def prompts_settings_finish(): return '_Промты настроены_'
+def edit_template(): return '_Шаблон изменён_'
+def advanced_settings_finish(): return '_Промты настроены_'
 
 
 def feedback(): return '_Поделитесь своими мыслями или предложениями, чтобы помочь нам улучшить бота_'
 def feedback_thanks(): return '_Спасибо за отзыв!_'
-def bug_report(): return '_Пожалуйста, расскажите о найденной ошибке_'
-def bug_report_thanks(): return'_Спасибо за помощь!_'
+def report(): return '_Пожалуйста, расскажите о найденной ошибке_'
+def report_thanks(): return'_Спасибо за помощь!_'
 
 
 def language(): return (
@@ -128,14 +143,6 @@ def language(): return (
     'Обратите внимание, что лучше всего бот работает на английском языке!_'
 )
 def new_language(): return '_Установлен русский язык_'
-
-
-def censorship(): return (
-    '_Здесь вы можете переключаться между моделью с цензурой (по умолчанию) и без цензуры. '
-    'Модель без цензуры работает дольше и менее качественно, чем основная модель!_'
-)
-def enable_censorship(): return '_Выбрана модель с цензурой_'
-def disable_censorship(): return '_Выбрана модель без цензуры_'
 
 
 def history(): return (
@@ -158,9 +165,9 @@ def not_generate(): return 'Ещё не сгенерировано'
 def old_information(): return 'ИНФОРМАЦИЯ НЕАКТУАЛЬНА'
 
 
-def openai(): return '_API изменён на OpenAI_'
-def groq(): return '_API изменён на Groq_'
-def ollama(): return '_API изменён на Ollama_'
+def gpt(): return '_Модель изменена на gpt_'
+def llama(): return '_Модель изменена на llama_'
+def gemini(): return '_Модель изменена на gemini_'
 
 
 def wait(): return (
@@ -177,4 +184,9 @@ def wait_strong(): return (
 
 def error(): return (
     f'_Произошла ошибка! Пожалуйста, попробуйте ещё!_'
+)
+
+
+def unknown_command(): return (
+    f'_Неизвестная команда_'
 )

@@ -1,12 +1,16 @@
 def start(): return (
     '*Welcome to BardicTalesAI!*\n\n'
 
-    'In this bot, you are the protagonist in an interactive storytelling experience. '
-    'You can choose your actions and shape the story as it unfolds.\n\n'
+    'In this bot, you become the main character of an interactive story. '
+    'You can make choices and influence the course of the narrative.\n\n'
 
-    'To begin, use /newgame. '
-    'Customize your experience with /settings and get assistance with /help. '
-    'Enjoy crafting your unique story!'
+    'To start, use /newgame. '
+    'Press /story\_settings to input your own settings, '
+    '/random\_settings to have random settings selected for each game, '
+    'or choose one of the preset genres.\n\n'
+
+    'Customize your story with /settings and learn more with /help. '
+    'Enjoy creating your unique adventure!'
 )
 
 
@@ -31,7 +35,6 @@ def help_admin(): return (
     '/newgame - start a new game\n'
     '/settings - customize the story\n'
     '/info - get main information about the story\n'
-    '/censorship - set censorship level\n'
     '/reset - reset to default settings\n\n'
 
     '*Bot*\n'
@@ -42,8 +45,12 @@ def help_admin(): return (
     '/cancel - cancel the current action\n\n'
 
     '*Admin mode*\n'
-    '/get\_settings - get current settings\n'
-    '/get\_time - get the average user wait time\n'
+    '/get\_settings - get the current settings\n'
+    '/get\_future - get a "map" of the plot development\n'
+    '/get\_time - get the average waiting time of users\n'
+    '/set\_gpt - switch the model to gpt for all users (by default)\n'
+    '/set\_llama - switch the model to llama for all users \n'
+    '/set\_gemini - switch the model to gemini for all users \n'
 )
 
 
@@ -108,97 +115,59 @@ def update_info_prompt(): return (
 )
 
 
-def info_template(): return (
-    '_Enter the template for storing key information about the story_'
+def templates_settings(): return (
+    '_Here you can configure the bot by changing the template it uses_'
 )
+
+
+def start_template(): return '_Enter the template for the first episode_'
+def move_template(): return '_Enter the episode template_'
+def future_template(): return '_Enter a template for thinking through the future plot_'
+def past_template(): return '_Enter a template for saving previous events_'
+def info_template(): return '_Enter the template for storing key information about the story_'
 
 
 def edit_prompt(): return '_Prompt has been changed_'
-def prompts_settings_finish(): return '_Prompts have been configured_'
+def edit_template(): return '_Templates has been changed_'
+def advanced_settings_finish(): return '_Bot have been configured_'
 
 
 def feedback(): return '_Please share your thoughts or suggestions so we can improve our service_'
-
-
-def feedback_thanks(): return (
-    '_Thank you for your feedback! '
-    'We will consider your suggestions and strive to improve our service_'
-)
-
-
-def bug_report(): return '_Please describe the bug you encountered_'
-
-
-def bug_report_thanks(): return (
-    '_Thank you for reporting the bug! '
-    'We will work on fixing it as soon as possible_'
-)
+def feedback_thanks(): return '_Thank you for your feedback!_'
+def report(): return '_Please describe the bug you encountered_'
+def report_thanks(): return '_Thank you for reporting the bug!_'
 
 
 def language(): return (
     '_Here you can set the game language. '
     'Please note that the bot works best in English!_'
 )
-
-
 def new_language(): return '_Language set to English_'
-
-
-def censorship(): return (
-    '_Here you can switch between the censored model (default) and the uncensored model. '
-    'The uncensored model takes longer to respond and is less accurate than the main model!_'
-)
-
-
-def enable_censorship(): return '_Censorship: on_'
-
-
-def disable_censorship(): return '_Censorship: off_'
 
 
 def history(): return (
     '_Here you can open (default) or hide the chat history with the bot. '
     'Leaving the history open helps us improve the bot!_'
 )
-
-
 def open_history(): return '_Incognito mode: off_'
-
-
 def hide_history(): return '_Incognito mode: on_'
 
 
 def reset(): return '_Settings have been reset_'
-
-
 def cancel(): return '_Action canceled_'
-
-
 def nogame(): return '_You need to start the game!_'
 
 
 def admin_success(): return '_Admin mode: on_'
-
-
 def admin_fail(): return '_ACCESS IS DENIED_'
-
-
 def admin_bye(): return '_Admin mode: off_'
-
-
 def not_generate(): return 'Not generated yet'
-
-
 def old_information(): return 'INFORMATION IS NOT RELEVANT'
 
 
-def openai(): return '_API changed to openai_'
-
-
-def groq(): return '_API changed to groq_'
-
-
-def ollama(): return '_API changed to ollama_'
+def gpt(): return '_Model changed to gpt_'
+def llama(): return '_Model changed to llama_'
+def gemini(): return '_Model changed to gemini_'
 
 
 def wait(): return (
@@ -215,4 +184,9 @@ def wait_strong(): return (
 
 def error(): return (
     f'_An error occurred! Please try again!_'
+)
+
+
+def unknown_command(): return (
+    f'_Unknown command_'
 )

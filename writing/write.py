@@ -41,6 +41,18 @@ class Write:
     async def set_update_info_prompt(self, prompt: str) -> None:
         await self.write_message('UpdateInfoPrompt', prompt)
 
+    async def set_start_template(self, prompt: str) -> None:
+        await self.write_message('StartTemplate', prompt)
+
+    async def set_move_template(self, prompt: str) -> None:
+        await self.write_message('MoveTemplate', prompt)
+
+    async def set_future_template(self, prompt: str) -> None:
+        await self.write_message('FutureTemplate', prompt)
+
+    async def set_past_template(self, prompt: str) -> None:
+        await self.write_message('PastTemplate', prompt)
+
     async def set_info_template(self, prompt: str) -> None:
         await self.write_message('InfoTemplate', prompt)
 
@@ -50,7 +62,7 @@ class Write:
     async def feedback(self, content: str) -> None:
         await self.write_feedback('Feedback', content)
 
-    async def bug_report(self, content: str) -> None:
+    async def report(self, content: str) -> None:
         await self.write_feedback('Report', content)
 
     def set_incognito(self, incognito: bool) -> None:

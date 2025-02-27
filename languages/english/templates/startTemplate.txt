@@ -1,0 +1,6 @@
+*[Episode Title]*
+
+*What will you do?*
+1. [First option]
+2. [Second option]
+...

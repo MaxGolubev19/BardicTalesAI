@@ -1,0 +1,37 @@
+**Protagonist**:
+- **Name**: [Name of the protagonist]
+- **Description**: [Appearance, personality, etc.]
+- **Abilities**: [List of current abilities or skills]
+- **Inventory**: [Current inventory or equipment]
+- **Current Objectives**: [Updated or new objectives]
+
+---
+
+**Key Characters**:
+1. **[Character Name]**:
+   - **Relationship to Protagonist**: [Relationship and how it has changed, if relevant]
+   - **Description**: [Personality, abilities, key traits]
+   - **Motives/Objectives**: [Current motives or objectives]
+  
+2. **[Character Name]**:
+   - **Relationship to Protagonist**: [Relationship and how it has changed, if relevant]
+   - **Description**: [Personality, abilities, key traits]
+   - **Motives/Objectives**: [Current motives or objectives]
+
+---
+
+**Important Locations**:
+1. **[Location Name]**:
+   - **Description**: [Environmental details and significance to the story]
+   - **Key Features**: [Important aspects or changes to the location]
+
+2. **[Location Name]**:
+   - **Description**: [Environmental details and significance to the story]
+   - **Key Features**: [Important aspects or changes to the location]
+
+---
+
+**Key Plot Points**:
+- **Main Conflict**: [Description of the central conflict or challenge]
+- **Important Events**: [New events that have affected the story]
+- **Current Threats or Obstacles**: [List any new threats or ongoing challenges]

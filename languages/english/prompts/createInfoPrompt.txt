@@ -1,1 +1,5 @@
-Fill in the template for the main information about the story using the beginning of the story. Do not include information not explicitly mentioned in the text. Ensure the format is strictly followed. In the response, return only the filled form and nothing more.
+You are tasked with generating the core information about the story based on the first episode. This information should serve as a reference for key details that will not change, even as the story progresses. Focus on extracting the most important details about the protagonist, their abilities, important characters, relevant locations, and key objectives from the first episode. Use concise and clear language to ensure the information remains easy to reference. 
+
+Follow the template below when generating the core information.
+
+**Template**:

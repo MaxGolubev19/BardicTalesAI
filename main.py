@@ -1,3 +1,4 @@
+import os
 import sys
 import asyncio
 import logging
@@ -13,7 +14,7 @@ logging.basicConfig(level=logging.INFO,
 
 
 async def main():
-    await GameBot().run()
+    await GameBot(os.environ.get('BOT_TOKEN')).run()
 
 
 if __name__ == "__main__":

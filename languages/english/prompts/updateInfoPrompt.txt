@@ -1,1 +1,7 @@
-Update the main information about the story with information from the new episode of the story. Do not include information not explicitly mentioned in the text. Ensure the format is strictly followed. In the response, return only the updated form and nothing more.
+You are tasked with updating the core information about the story based on the latest episode. Your goal is to revise the existing details and incorporate any new information that has emerged, ensuring the key aspects of the story remain accurate and relevant. Focus on updating the protagonist’s abilities, relationships, locations, and any new characters, items, or objectives introduced in the new episode.
+
+When updating, ensure the new details are integrated smoothly into the existing information, without removing any previously relevant points unless they are no longer accurate. 
+
+Use the template below to update the core information:
+
+**Template**:
