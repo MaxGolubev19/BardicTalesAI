@@ -69,3 +69,6 @@ Telegram-бот, генерирующий интерактивные истор�
    ```
 
 5. Открой своего бота в Telegram, чтобы начать игру!
+
+## 📜 Лицензия
+Этот проект лицензирован под [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License](http://creativecommons.org/licenses/by-nc-nd/4.0/). Подробнее см. в файле `LICENSE`.
